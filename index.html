@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Excel → PNR TXT Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+
+  </head>
+  <body>
+    <div id="authBar">
+      <div class="login-card">
+        <form id="loginForm">
+          <div class="input-group">
+            <input id="username" type="text" placeholder="Username" />
+
+          </div>
+
+          <div class="input-group">
+            <input id="password" type="password" placeholder="Password" />
+          </div>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <h4 style="text-align: center;">! Assalamualaikum Musaddak Vai !</h4>
+      <h2>✈️ Excel → PNR NAME & DOCS</h2>
+
+      <input type="file" id="excelFile" accept=".xlsx,.xls" />
+      <br />
+      <button id="downloadBtn" disabled>⬇ Download TXT</button>
+      <button id="macroNameBtn" disabled>⬇ Macro Name TXT</button>
+      <button id="macroDocsBtn" disabled>⬇ Macro Docs TXT</button>
+
+      <pre id="output">Waiting for Excel upload...</pre>
+      <pre id="errorOutput">Waiting for..</pre>
+      <pre id="macroNameCommand">Waiting Macro Text for..</pre>
+      <pre id="macroDocsCommand">Waiting Macro Docs for..</pre>
+      <div class="logout-button" style="text-align: center">
+        <button
+          style="display: block"
+          id="logoutBtn"
+          style="display: none"
+          onclick="logout()"
+        >
+          Sign Out
+        </button>
+      </div>
+    </div>
+    <script src="app/js/auth.js"></script>
+    <script src="/app/js/main.js"></script>
+
+    
+  </body>
+</html>

@@ -1,0 +1,255 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+button {
+    padding: 8px 12px;
+    margin-top: 10px;
+}
+
+pre {
+    background: #f4f4f4;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+#output {
+    background: #f4f4f4;
+    color: #333;
+    /* normal text color */
+}
+
+#errorOutput {
+    background: #fff0f0;
+    /* light red background for errors */
+    color: #a00;
+    /* dark red text */
+}
+
+body {
+    font-family: Arial;
+    padding: 20px;
+    background: #cae1dd;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px;
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa, #e4ebf5);
+
+}
+
+
+.card {
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+input,
+button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+button {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+textarea {
+    width: 100%;
+}
+
+button:hover {
+    background: #1e4ed8;
+}
+
+small,
+span {
+    color: #555;
+}
+
+#dropZone {
+    border: 3px dashed #2563eb;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    font-size: 1rem;
+    color: #2563eb;
+    margin-bottom: 16px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+#dropZone.dragover {
+    background-color: #dbeafe;
+}
+
+.card {
+    display: none;
+}
+
+#authBar {
+    min-height: 100vh;
+    /* full screen height */
+    display: flex;
+    justify-content: center;
+    /* horizontal center */
+    align-items: center;
+    /* vertical center */
+    background: #f5f7fb;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 360px;
+    padding: 24px;
+    border-radius: 12px;
+    background: rgb(60, 140, 165);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+#userStatus {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2563eb;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+#loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#loginForm input {
+    padding: 12px 0px 12px 10px;
+    font-size: 1rem;
+    border: 2px solid #cbd5e1;
+    /* slate-300 */
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+}
+
+#loginForm input:focus {
+    outline: none;
+    border-color: #2563eb;
+    /* blue-600 */
+    box-shadow: 0 0 5px rgba(37, 99, 235, 0.5);
+}
+
+/* .hint {
+  opacity: 0;
+  transform: translateY(-4px);
+   transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 12px;
+  color: #666;
+  margin: 4px 0 12px;
+  pointer-events: none;
+}
+
+.hint.show {
+  opacity: 1;
+  transform: translateY(0);
+} */
+
+
+.input-group {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+/* Tooltip bubble */
+.tooltip {
+    position: absolute;
+    top: 50%;
+    left: 105%;
+    transform: translateY(-50%) translateX(-6px);
+    background: #4d5661;
+    color: #fff;
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Arrow */
+.tooltip::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -6px;
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent #1f2937 transparent transparent;
+}
+
+/* Visible state */
+.tooltip.show {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+
+#loginForm button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    background-color: #9ca811;
+    /* blue-600 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+#loginForm button:hover {
+    background-color: #539b3d;
+    /* blue-800 */
+}
+
+#logoutBtn {
+    display: block;
+    margin: 30px auto;
+    width: 30%;
+    padding: 10px 30px;
+    font-size: 1rem;
+    font-weight: 700;
+    background-color: #53d3ad;
+    /* red-500 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: none;
+    transition: background-color 0.3s ease;
+}
+
+#logoutBtn:hover {
+    background-color: #b91c1c;
+    /* red-700 */
+}
