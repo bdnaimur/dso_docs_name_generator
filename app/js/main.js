@@ -34,8 +34,9 @@ function handleFile(e) {
     // let txtLines = [];
     let docsCounter = 2; // starts from 2.1
 
-    for (let i = 0; i < rows.length; i += BLOCK_SIZE) {
-      const block = rows.slice(i, i + BLOCK_SIZE);
+    // for (let i = 0; i < rows.length; i += BLOCK_SIZE) {
+    // for (let i = 0; i < rows.length; i++) {
+      const block = rows.slice(0, rows.length);
 
       block.forEach((row, idx) => {
         const isValidPassport = row?.PassportNo.length !== 8;
@@ -76,7 +77,7 @@ function handleFile(e) {
             );
         }
       });
-    }
+    // }
 
     document.getElementById("output").textContent = txtLines.join("\n");
     // console.log(errorLines);
@@ -104,8 +105,9 @@ function formatName(row, index) {
   const title = row.Gender === "F" ? "MS" : "MR";
 
   // First line of every 15-line block → no Σ
-  const isFirstInBlock = index % 15 === 0;
-  const prefix = isFirstInBlock ? "" : "Σ";
+//   const isFirstInBlock = index % 15 === 0;
+//   const prefix = isFirstInBlock ? "" : "Σ";
+  const prefix = index == 0 ? "" : "Σ";
 
   // console.log(row.FirstName);
   if (row?.LastName && row?.FirstName) {
