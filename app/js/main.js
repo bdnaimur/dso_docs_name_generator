@@ -28,7 +28,7 @@ function handleFile(e) {
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
-    // console.log(rows);
+    console.log(rows);
 
     const BLOCK_SIZE = 15;
     // let txtLines = [];
