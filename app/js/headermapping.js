@@ -261,7 +261,6 @@
 //   downloadFile(l, `MACRO_DOCS_${date}_${time}.txt`);
 // }
 
-
 /* ======================================================
    DATE & TIME
 ====================================================== */
@@ -294,7 +293,9 @@ const EXPECTED_FIELDS = [
    FLEXIBLE HEADER HANDLING
 ====================================================== */
 function normalizeKey(str) {
-  return String(str).toLowerCase().replace(/[^a-z0-9]/g, "");
+  return String(str)
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
 }
 
 function autoMapHeaders(headers) {
@@ -304,6 +305,8 @@ function autoMapHeaders(headers) {
     const match = EXPECTED_FIELDS.find((f) => n.includes(f));
     if (match) map[match] = header;
   });
+  // console.log("map", map);
+  
   return map;
 }
 
@@ -311,7 +314,7 @@ let headerMap = {};
 
 function getRowValue(row, field) {
   const header = headerMap[field];
-  return header ? row[header] ?? "" : "";
+  return header ? (row[header] ?? "") : "";
 }
 
 /* ======================================================
@@ -395,7 +398,7 @@ function handleFile(e) {
     if (missingFields.length > 0) {
       alert(
         "Upload stopped.\nMissing required columns:\n\n" +
-          missingFields.join(", ")
+          missingFields.join(", "),
       );
 
       // Reset file input so user must re-upload
@@ -412,12 +415,17 @@ function handleFile(e) {
     /* ---------- NAME BLOCK ---------- */
     rows.forEach((row, idx) => {
       const passport = getRowValue(row, "passport");
-      const gender = getRowValue(row, "gender").toUpperCase();
+      const gender = getRowValue(row, "gender");
+      // const firstname = getRowValue(row, "firstname").trim() !== "";
+      // const lastname = getRowValue(row, "lastname").trim() !== "";
 
       const validPassport = passport && passport.length !== 8;
       const validGender = ["M", "F"].includes(gender);
+      const validFirstName = row["firstname"].split(".").length > 1;
+      const validLastName = row["lastname"].split(".").length > 1;
+      // console.log(, );
 
-      if (validPassport && validGender) {
+      if (validPassport && validGender && !validFirstName && !validLastName) {
         const prefix = idx === 0 ? "" : "Σ";
         const nameLine = formatName(row, prefix);
         txtLines.push(nameLine);
@@ -429,21 +437,29 @@ function handleFile(e) {
     /* ---------- DOCS BLOCK ---------- */
     rows.forEach((row, idx) => {
       const passport = getRowValue(row, "passport");
-      const gender = getRowValue(row, "gender").toUpperCase();
-
+      const gender = getRowValue(row, "gender");
+      const validFirstName = row["firstname"].split(".").length > 1;
+      const validLastName = row["lastname"].split(".").length > 1;
       const validPassport = passport && passport.length !== 8;
       const validGender = ["M", "F"].includes(gender);
 
-      if (validPassport && validGender) {
+      if (validPassport && validGender && !validFirstName && !validLastName) {
         txtLines.push(formatDOCS(row, idx, docsCounter));
         macroCommandDocs.push(`WINCMD("${formatDOCS(row, 0, docsCounter)}")`);
         macroCommandDocs.push("SLEEP(1000)");
         docsCounter++;
       }
+      else {
+        if (!validPassport || !validGender || validFirstName || validLastName)
+          errorLines.push(
+            `Issue with | ${passport} | ${getRowValue(row, "lastname")} | ${getRowValue(row, "firstname")}`
+          );
+      }
     });
 
     /* ---------- OUTPUT ---------- */
     document.getElementById("output").textContent = txtLines.join("\n");
+    document.getElementById("errorOutput").textContent = errorLines.join("\n");
     document.getElementById("macroNameCommand").textContent =
       macroCommandName.join("\n");
     document.getElementById("macroDocsCommand").textContent =
@@ -483,16 +499,16 @@ function formatDOCS(row, idx, counter) {
   const prefix = idx === 0 ? "" : "Σ";
 
   return `${prefix}4DOCS/P/BGD/${getRowValue(row, "passport")}/BGD/${formatDate(
-    getRowValue(row, "dob")
-  )}/${getRowValue(row, "gender")}/${formatDate(
-    getRowValue(row, "doe")
-  )}/${(
+    getRowValue(row, "dob"),
+  )}/${getRowValue(row, "gender")}/${formatDate(getRowValue(row, "doe"))}/${(
     getRowValue(row, "lastname") || getRowValue(row, "firstname")
   )
     .toUpperCase()
-    .trim()}/${getRowValue(row, "firstname")
-    ? getRowValue(row, "firstname").toUpperCase().trim()
-    : "FNU"}-${counter}.1`;
+    .trim()}/${
+    getRowValue(row, "firstname")
+      ? getRowValue(row, "firstname").toUpperCase().trim()
+      : "FNU"
+  }-${counter}.1`;
 }
 
 /* ======================================================
@@ -508,9 +524,22 @@ function excelDateToJSDate(v) {
 
 function formatDate(v) {
   const d = excelDateToJSDate(v);
-  const m = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  const m = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
   return `${String(d.getDate()).padStart(2, "0")}${m[d.getMonth()]}${String(
-    d.getFullYear()
+    d.getFullYear(),
   ).slice(-2)}`;
 }
 
