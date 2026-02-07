@@ -306,7 +306,7 @@ function autoMapHeaders(headers) {
     if (match) map[match] = header;
   });
   // console.log("map", map);
-  
+
   return map;
 }
 
@@ -423,9 +423,18 @@ function handleFile(e) {
       const validGender = ["M", "F"].includes(gender);
       const validFirstName = row["firstname"].split(".").length > 1;
       const validLastName = row["lastname"].split(".").length > 1;
+      const validDOB = formatDate(getRowValue(row, "dob"));
+      const validDOE = formatDate(getRowValue(row, "doe"));
       // console.log(, );
 
-      if (validPassport && validGender && !validFirstName && !validLastName) {
+      if (
+        validPassport &&
+        validGender &&
+        !validFirstName &&
+        !validLastName &&
+        validDOB &&
+        validDOE
+      ) {
         const prefix = idx === 0 ? "" : "Σ";
         const nameLine = formatName(row, prefix);
         txtLines.push(nameLine);
@@ -442,18 +451,35 @@ function handleFile(e) {
       const validLastName = row["lastname"].split(".").length > 1;
       const validPassport = passport && passport.length !== 8;
       const validGender = ["M", "F"].includes(gender);
-
-      if (validPassport && validGender && !validFirstName && !validLastName) {
+      const validDOB = formatDate(getRowValue(row, "dob"));
+      const validDOE = formatDate(getRowValue(row, "doe"));
+      if (
+        validPassport &&
+        validGender &&
+        !validFirstName &&
+        !validLastName &&
+        validDOB &&
+        validDOE
+      ) {
         txtLines.push(formatDOCS(row, idx, docsCounter));
         macroCommandDocs.push(`WINCMD("${formatDOCS(row, 0, docsCounter)}")`);
         macroCommandDocs.push("SLEEP(1000)");
         docsCounter++;
-      }
-      else {
-        if (!validPassport || !validGender || validFirstName || validLastName)
+      } else {
+        const errors = [];
+
+        if (!validPassport) errors.push("INV Passport");
+        if (!validGender) errors.push("INV Gender");
+        if (!validFirstName) errors.push("INV First Name");
+        if (!validLastName) errors.push("INV Last Name");
+        if (!validDOB) errors.push("INV Date of Birth");
+        if (!validDOE) errors.push("INV Date of Expiry");
+
+        if (errors.length > 0) {
           errorLines.push(
-            `Issue with | ${passport} | ${getRowValue(row, "lastname")} | ${getRowValue(row, "firstname")}`
+            `Passport: ${passport} | Last Name: ${getRowValue(row, "lastname")} | First Name: ${getRowValue(row, "firstname")} | Issues: ${errors.join(", ")}`,
           );
+        }
       }
     });
 
@@ -517,13 +543,17 @@ function formatDOCS(row, idx, counter) {
 function excelDateToJSDate(v) {
   if (typeof v === "string") {
     const d = new Date(v);
-    if (!isNaN(d)) return d;
+
+    if (isNaN(d)) return true;
+    console.log(isNaN(d), "d for date", d);
   }
   return new Date((v - 25569) * 86400 * 1000);
 }
 
 function formatDate(v) {
   const d = excelDateToJSDate(v);
+  // console.log("d", d);
+  if (d === true) return false; // If date parsing failed, return original value
   const m = [
     "JAN",
     "FEB",
@@ -538,6 +568,7 @@ function formatDate(v) {
     "NOV",
     "DEC",
   ];
+
   return `${String(d.getDate()).padStart(2, "0")}${m[d.getMonth()]}${String(
     d.getFullYear(),
   ).slice(-2)}`;
