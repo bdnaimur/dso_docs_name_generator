@@ -44,7 +44,8 @@ function handleFile(e) {
           row?.Gender &&
           (row?.Gender.toUpperCase() == "M" ||
             row?.Gender.toUpperCase() == "F");
-        // console.log("isGender", isGenderExist);
+        console.log("isGender", isGenderExist);
+console.log("test", row?.toUpperCase());
 
         if (isValidPassport && isGenderExist) {
           const prefix = idx === 0 ? "" : "Σ";
