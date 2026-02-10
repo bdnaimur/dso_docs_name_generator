@@ -413,76 +413,177 @@ function handleFile(e) {
     let docsCounter = 2;
 
     /* ---------- NAME BLOCK ---------- */
-    rows.forEach((row, idx) => {
+    // rows.forEach((row, idx) => {
+    //   const passport = getRowValue(row, "passport");
+    //   const gender = getRowValue(row, "gender");
+    //   // const firstname = getRowValue(row, "firstname").trim() !== "";
+    //   // const lastname = getRowValue(row, "lastname").trim() !== "";
+
+    //   const validPassport = passport && passport.length !== 8;
+    //   const validGender = ["M", "F"].includes(gender);
+    //   const validFirstName = row["firstname"].split(".").length > 1;
+    //   const validLastName = row["lastname"].split(".").length > 1;
+    //   let replaceFirstName = validFirstName && row["firstname"].split(".").join(" ");
+    //   let replaceLastName = validLastName && row["lastname"].split(".").join(" ");
+    //   console.log("replace", replaceFirstName, replaceLastName);
+
+    //   if(replaceFirstName)  row["firstname"] = replaceFirstName;
+    //   if(replaceLastName)row["lastname"] = replaceLastName;
+
+    //   // const validLastName = row["lastname"].split(".").join(" ");
+    //   const validDOB = formatDate(getRowValue(row, "dob"));
+    //   const validDOE = formatDate(getRowValue(row, "doe"));
+    //   // console.log(, );
+
+    //   if (
+    //     validPassport &&
+    //     validGender &&
+    //     // !validFirstName &&
+    //     // !validLastName &&
+    //     validDOB &&
+    //     validDOE
+    //   ) {
+    //     const prefix = idx === 0 ? "" : "Σ";
+    //     const nameLine = formatName(row, prefix);
+    //     txtLines.push(nameLine);
+    //     macroCommandName.push(`WINCMD("${formatName(row, "")}")`);
+    //     macroCommandName.push("SLEEP(1000)");
+    //   }
+    // });
+
+    // /* ---------- DOCS BLOCK ---------- */
+    // rows.forEach((row, idx) => {
+    //   const passport = getRowValue(row, "passport");
+    //   const gender = getRowValue(row, "gender");
+    //   // const validFirstName = row["firstname"].split(".").length > 1;
+    //   // const validLastName = row["lastname"].split(".").length > 1;
+    //   const validPassport = passport && passport.length !== 8;
+    //   const validGender = ["M", "F"].includes(gender);
+    //   const validDOB = formatDate(getRowValue(row, "dob"));
+    //   const validDOE = formatDate(getRowValue(row, "doe"));
+    //   if (
+    //     validPassport &&
+    //     validGender &&
+    //     // !validFirstName &&
+    //     // !validLastName &&
+    //     validDOB &&
+    //     validDOE
+    //   ) {
+    //     txtLines.push(formatDOCS(row, idx, docsCounter));
+    //     macroCommandDocs.push(`WINCMD("${formatDOCS(row, 0, docsCounter)}")`);
+    //     macroCommandDocs.push("SLEEP(1000)");
+    //     docsCounter++;
+    //   } else {
+    //     const errors = [];
+
+    //     if (!validPassport) errors.push("INV Passport");
+    //     if (!validGender) errors.push("INV Gender");
+    //     // if (!validFirstName) errors.push("INV First Name");
+    //     // if (!validLastName) errors.push("INV Last Name");
+    //     if (!validDOB) errors.push("INV Date of Birth");
+    //     if (!validDOE) errors.push("INV Date of Expiry");
+
+    //     if (errors.length > 0) {
+    //       errorLines.push(
+    //         `Passport: ${passport} | Last Name: ${getRowValue(row, "lastname")} | First Name: ${getRowValue(row, "firstname")} | Issues: ${errors.join(", ")}`,
+    //       );
+    //     }
+    //   }
+    // });
+
+    const isValidPassport = (passport) =>
+      typeof passport === "string" && passport.length !== 8;
+
+    const isValidGender = (gender) => ["M", "F"].includes(gender);
+
+    const normalizeName = (name) => {
+      if (!name || typeof name !== "string") return null;
+      return name.includes(".") ? name.split(".").join(" ") : null;
+    };
+
+    const validateRow = (row) => {
       const passport = getRowValue(row, "passport");
       const gender = getRowValue(row, "gender");
-      // const firstname = getRowValue(row, "firstname").trim() !== "";
-      // const lastname = getRowValue(row, "lastname").trim() !== "";
+      const dob = formatDate(getRowValue(row, "dob"));
+      const doe = formatDate(getRowValue(row, "doe"));
 
-      const validPassport = passport && passport.length !== 8;
-      const validGender = ["M", "F"].includes(gender);
-      const validFirstName = row["firstname"].split(".").length > 1;
-      const validLastName = row["lastname"].split(".").length > 1;
-      const validDOB = formatDate(getRowValue(row, "dob"));
-      const validDOE = formatDate(getRowValue(row, "doe"));
-      // console.log(, );
+      return {
+        passport,
+        gender,
+        dob,
+        doe,
+        isValidPassport: isValidPassport(passport),
+        isValidGender: isValidGender(gender),
+        isValidDOB: !!dob,
+        isValidDOE: !!doe,
+      };
+    };
 
-      if (
-        validPassport &&
-        validGender &&
-        !validFirstName &&
-        !validLastName &&
-        validDOB &&
-        validDOE
-      ) {
-        const prefix = idx === 0 ? "" : "Σ";
-        const nameLine = formatName(row, prefix);
-        txtLines.push(nameLine);
-        macroCommandName.push(`WINCMD("${formatName(row, "")}")`);
-        macroCommandName.push("SLEEP(1000)");
-      }
+    /* ---------- NAME BLOCK ---------- */
+    rows.forEach((row, idx) => {
+      const validation = validateRow(row);
+
+      // Normalize names (replace "." with space)
+      const updatedFirstName = normalizeName(row.firstname);
+      const updatedLastName = normalizeName(row.lastname);
+
+      if (updatedFirstName) row.firstname = updatedFirstName;
+      if (updatedLastName) row.lastname = updatedLastName;
+
+      const isRowValid =
+        validation.isValidPassport &&
+        validation.isValidGender &&
+        validation.isValidDOB &&
+        validation.isValidDOE;
+
+      if (!isRowValid) return;
+
+      const prefix = idx === 0 ? "" : "Σ";
+      const nameLine = formatName(row, prefix);
+
+      txtLines.push(nameLine);
+      macroCommandName.push(`WINCMD("${formatName(row, "")}")`);
+      macroCommandName.push("SLEEP(1000)");
     });
 
     /* ---------- DOCS BLOCK ---------- */
     rows.forEach((row, idx) => {
-      const passport = getRowValue(row, "passport");
-      const gender = getRowValue(row, "gender");
-      const validFirstName = row["firstname"].split(".").length > 1;
-      const validLastName = row["lastname"].split(".").length > 1;
-      const validPassport = passport && passport.length !== 8;
-      const validGender = ["M", "F"].includes(gender);
-      const validDOB = formatDate(getRowValue(row, "dob"));
-      const validDOE = formatDate(getRowValue(row, "doe"));
-      if (
-        validPassport &&
-        validGender &&
-        !validFirstName &&
-        !validLastName &&
-        validDOB &&
-        validDOE
-      ) {
-        txtLines.push(formatDOCS(row, idx, docsCounter));
+      const validation = validateRow(row);
+
+      const isRowValid =
+        validation.isValidPassport &&
+        validation.isValidGender &&
+        validation.isValidDOB &&
+        validation.isValidDOE;
+
+      if (isRowValid) {
+        const docsLine = formatDOCS(row, idx, docsCounter);
+
+        txtLines.push(docsLine);
         macroCommandDocs.push(`WINCMD("${formatDOCS(row, 0, docsCounter)}")`);
         macroCommandDocs.push("SLEEP(1000)");
+
         docsCounter++;
-      } else {
-        const errors = [];
+        return;
+      }
 
-        if (!validPassport) errors.push("INV Passport");
-        if (!validGender) errors.push("INV Gender");
-        if (!validFirstName) errors.push("INV First Name");
-        if (!validLastName) errors.push("INV Last Name");
-        if (!validDOB) errors.push("INV Date of Birth");
-        if (!validDOE) errors.push("INV Date of Expiry");
+      /* ---------- ERROR HANDLING ---------- */
+      const errors = [];
 
-        if (errors.length > 0) {
-          errorLines.push(
-            `Passport: ${passport} | Last Name: ${getRowValue(row, "lastname")} | First Name: ${getRowValue(row, "firstname")} | Issues: ${errors.join(", ")}`,
-          );
-        }
+      if (!validation.isValidPassport) errors.push("Invalid Passport");
+      if (!validation.isValidGender) errors.push("Invalid Gender");
+      if (!validation.isValidDOB) errors.push("Invalid Date of Birth");
+      if (!validation.isValidDOE) errors.push("Invalid Date of Expiry");
+
+      if (errors.length) {
+        errorLines.push(
+          `Passport: ${validation.passport} | ` +
+            `Last Name: ${getRowValue(row, "lastname")} | ` +
+            `First Name: ${getRowValue(row, "firstname")} | ` +
+            `Issues: ${errors.join(", ")}`,
+        );
       }
     });
-
     /* ---------- OUTPUT ---------- */
     document.getElementById("output").textContent = txtLines.join("\n");
     document.getElementById("errorOutput").textContent = errorLines.join("\n");
@@ -545,7 +646,7 @@ function excelDateToJSDate(v) {
     const d = new Date(v);
 
     if (isNaN(d)) return true;
-    console.log(isNaN(d), "d for date", d);
+    // console.log(isNaN(d), "d for date", d);
   }
   return new Date((v - 25569) * 86400 * 1000);
 }
