@@ -236,6 +236,8 @@ function validateRow(row) {
 
   const errors = [];
 
+  console.log("dob", dob, "doe", doe);
+  
   if (!isValidPassport(passport)) errors.push("Invalid Passport");
   if (!isValidGender(gender)) errors.push("Invalid Gender");
   if (!dob) errors.push("Invalid Date of Birth");

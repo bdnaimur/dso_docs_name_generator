@@ -1,60 +1,111 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Excel → PNR TXT Generator</title>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="style.css" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
 
-  </head>
-  <body>
-    <div id="authBar">
-      <div class="login-card">
-        <form id="loginForm">
-          <div class="input-group">
-            <input id="username" type="text" placeholder="Username" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-          </div>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            overflow: hidden;
+        }
 
-          <div class="input-group">
-            <input id="password" type="password" placeholder="Password" />
-          </div>
-          <button type="submit">Login</button>
-        </form>
-      </div>
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            color: white;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            color: #764ba2;
+            background: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255,255,255,0.25);
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .circle:nth-child(1) {
+            width: 250px;
+            height: 250px;
+            top: -100px;
+            left: -100px;
+        }
+
+        .circle:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            bottom: -150px;
+            right: -150px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="circle"></div>
+    <div class="circle"></div>
+
+    <div class="container">
+        <div class="error-code">404</div>
+        <h1 class="title">Page Not Found</h1>
+        <p class="message">
+            Oops! The page you're looking for doesn't exist,
+            has been moved, or is temporarily unavailable.
+        </p>
+
+        <a href="/" class="btn">Go Back Home</a>
     </div>
-    <div class="card">
-      <h4 style="text-align: center;">! Assalamualaikum Brother, Pricing !</h4>
-      <h2>✈️ Excel → PNR NAME & DOCS</h2>
 
-      <span id="headerPreview"></span>
-      <input type="file" id="excelFile" accept=".xlsx,.xls" />
-      <br />
-      <button id="downloadBtn" disabled>⬇ Download TXT</button>
-      <button id="macroNameBtn" disabled>⬇ Macro Name TXT</button>
-      <button id="macroDocsBtn" disabled>⬇ Macro Docs TXT</button>
-
-      <pre id="output">Waiting for Excel upload...</pre>
-      <pre style="overflow-x: auto;" id="errorOutput">Waiting for..</pre>
-      <pre id="macroNameCommand">Waiting Macro Text for..</pre>
-      <pre id="macroDocsCommand">Waiting Macro Docs for..</pre>
-      <div class="logout-button" style="text-align: center">
-        <button
-          style="display: block"
-          id="logoutBtn"
-          style="display: none"
-          onclick="logout()"
-        >
-          Sign Out
-        </button>
-      </div>
-    </div>
-    <script src="app/js/auth.js"></script>
-    <!-- <script src="/app/js/main.js"></script> -->
-    <!-- <script src="/app/js/format.js"></script> -->
-     <!-- <script src="/app/js/headermapping.js"></script> -->
-     <script src="/app/js/dotIssue.js.js"></script>
-
-    
-  </body>
+</body>
 </html>
