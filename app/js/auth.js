@@ -132,6 +132,7 @@ async function login() {
   ) {
     localStorage.setItem("loggedIn", "true");
     updateUser(true);
+    startInactivityTimer();
   } else {
     alert("Incorrect username or password");
   }
@@ -140,6 +141,7 @@ async function login() {
 function logout() {
   localStorage.removeItem("loggedIn");
   updateUser(false);
+  clearTimeout(inactivityTimer);
 }
 
 function updateUser(isLoggedIn) {
